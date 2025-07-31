@@ -1,0 +1,197 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
+{ config, pkgs, ... }:
+
+{
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+    ];
+
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # Use latest kernel.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  networking = {
+    hostName = "littleglukki-pc"; # Define your hostname.
+    nameservers = [ "1.1.1.1" "8.8.8.8" "8.8.4.4" ];
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  };
+
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+
+  # Enable networking
+  networking.networkmanager.enable = true;
+
+  # Set your time zone.
+  time.timeZone = "Europe/Madrid";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_GB.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "es_ES.UTF-8";
+    LC_IDENTIFICATION = "es_ES.UTF-8";
+    LC_MEASUREMENT = "es_ES.UTF-8";
+    LC_MONETARY = "es_ES.UTF-8";
+    LC_NAME = "es_ES.UTF-8";
+    LC_NUMERIC = "es_ES.UTF-8";
+    LC_PAPER = "es_ES.UTF-8";
+    LC_TELEPHONE = "es_ES.UTF-8";
+    LC_TIME = "es_ES.UTF-8";
+  };
+
+  # Enable the X11 windowing system.
+  services.xserver.enable = true;
+
+  # Enable the GNOME Desktop Environment.
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
+
+  # Configure console keymap
+  console.keyMap = "us";
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+  # Enable sound with pipewire.
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
+  };
+
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.xserver.libinput.enable = true;
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.maksim = {
+    isNormalUser = true;
+    description = "Maksim";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+    #  thunderbird
+    ];
+  };
+
+  # Enable automatic login for the user.
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "maksim";
+
+  # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
+
+  # Install firefox.
+  programs.firefox.enable = true;
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment.systemPackages = with pkgs; [
+    vim
+    wget
+    git
+    firefox
+  ];
+
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
+
+  # List services that you want to enable:
+
+  # Enable the OpenSSH daemon.
+  services.openssh.enable = true;
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCwqiAa9RvoLwX/DM2Ifpi7GeZe1u9otNF/+276/VSlF8BlCw2/SYB4KCjHKgXyo4OSeW8Ir1TqWeaeO2WGFuNJWeKUvAXajQkS2wawx05V+NREQXs7kcXUgZwNG88p8hgssqRR2dGJc+Xrf/lJg3HMm6VPgDDvW6Vy9QkFlazk59yke8zHXwkjjiY1YkPX1gaa0gUIONG6EglolxSNjgZH+yvhm59vz61uzKwUI8bxuNem1aXgstEL+OvYMFGVJ+8F8htSLdwKIhk2k6dC4rvtL14FrNJQYc2Y1xaLNAbreWn48wPjLEIOTtH6m0NsYng1tOrP5MVvn2nIX5bEqdfMhESYv63I7lzaFlNHsE5bMdRMMAjlttjui34y5Efj3i3WJ+mw7KOAdlGssDtlYJmozSf51o3w/x+kSlSnM+spKCVnXKvDy9Em9Bl/DvVKSN8MIbYySzh5Kabynbp6ua8ZZp/M5a44E/RMr+KoTFWpp1PpdbbSq/uL/0wwBDYC22WtSnATAG+P4ZWJ8L4jV3YAy9OjBOT5iVsOZgct3RUhclb0CV+JnQDncRU6g9yXVr9AVHqfk9DkMCbPhR5cQUW8U3DicXlepHzQeHnHP4hJ5LWozLQW06uLWXnUfYJLZwGFpDl+k1PT+9KkGVdiruEsw6XTPYjYxpZ2fGGXLUEilQ== glukki.spb.ru@gmail.com"
+  ];
+
+  # Tailscale
+  services.tailscale.enable = true;
+
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
+  # Space
+  services.journald = {
+    extraConfig = "SystemMaxUse=200M";
+  };
+
+  services.logrotate = {
+    enable = true;
+    settings = {
+      header = {
+        frequency = "weekly";
+        rotate = 4;
+        create = true;
+        dateext = true;
+        compress = true;
+      };
+    };
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "Mon *-*-* 04:20";
+    options = "--delete-older-than 14d";
+  };
+
+  nix.extraOptions = ''
+    min-free = ${toString (100 * 1024 * 1024)}
+    max-free = ${toString (1024 * 1024 * 1024)}
+  '';
+
+  nix.optimise = {
+    automatic = true;
+    dates = [ "Mon *-*-* 06:20" ];
+  };
+
+  # Updates
+  system.autoUpgrade = {
+    enable = true;
+    allowReboot = false;
+    dates = "Mon *-*-* 05:20";
+    channel = "https://nixos.org/channels/nixos-unstable";
+  };
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "25.05"; # Did you read the comment?
+
+}
