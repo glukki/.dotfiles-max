@@ -134,7 +134,7 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCwqiAa9RvoLwX/DM2Ifpi7GeZe1u9otNF/+276/VSlF8BlCw2/SYB4KCjHKgXyo4OSeW8Ir1TqWeaeO2WGFuNJWeKUvAXajQkS2wawx05V+NREQXs7kcXUgZwNG88p8hgssqRR2dGJc+Xrf/lJg3HMm6VPgDDvW6Vy9QkFlazk59yke8zHXwkjjiY1YkPX1gaa0gUIONG6EglolxSNjgZH+yvhm59vz61uzKwUI8bxuNem1aXgstEL+OvYMFGVJ+8F8htSLdwKIhk2k6dC4rvtL14FrNJQYc2Y1xaLNAbreWn48wPjLEIOTtH6m0NsYng1tOrP5MVvn2nIX5bEqdfMhESYv63I7lzaFlNHsE5bMdRMMAjlttjui34y5Efj3i3WJ+mw7KOAdlGssDtlYJmozSf51o3w/x+kSlSnM+spKCVnXKvDy9Em9Bl/DvVKSN8MIbYySzh5Kabynbp6ua8ZZp/M5a44E/RMr+KoTFWpp1PpdbbSq/uL/0wwBDYC22WtSnATAG+P4ZWJ8L4jV3YAy9OjBOT5iVsOZgct3RUhclb0CV+JnQDncRU6g9yXVr9AVHqfk9DkMCbPhR5cQUW8U3DicXlepHzQeHnHP4hJ5LWozLQW06uLWXnUfYJLZwGFpDl+k1PT+9KkGVdiruEsw6XTPYjYxpZ2fGGXLUEilQ== glukki.spb.ru@gmail.com"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKCWW2SuW7niZNrZn+IpVYwVIad3Y2Cm59YjtJp8pm1g vital.mesh@gmail.com"
   ];
 
   # Tailscale
